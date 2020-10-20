@@ -1,0 +1,18 @@
+<launch>
+
+  <arg name="kin_sub_topic"   default="/kinect2/qhd/points" />
+  <arg name="rgb_sub_topic"   default="/kinect2/qhd/image_color_rect"/>
+  <arg name="kin_pub_topic"   default="/hsv_points"/>
+  <arg name="kin_pub_frame"   default="/kinect2_rgb_optical_frame"/>
+
+  <node name="hsv_check"  pkg="hsv_node_threshold"  type="hsv_check_node" respawn="false">
+    <param name="kin_sub_topic"   type="str"    value="$(arg kin_sub_topic)"/>
+    <param name="kin_pub_topic"   type="str"    value="$(arg kin_pub_topic)"/>
+    <param name="rgb_sub_topic"   type="str"    value="$(arg rgb_sub_topic)"/>
+    <param name="kin_pub_frame"   type="str"    value="$(arg kin_pub_frame)"/>
+
+    <rosparam param="hsv_lower">[30.0,120.0,120.0]</rosparam>
+    <rosparam param="hsv_upper">[90.0,255.0,255.0]</rosparam>
+
+  </node>
+</launch>

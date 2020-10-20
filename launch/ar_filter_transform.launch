@@ -1,0 +1,32 @@
+<launch>
+
+  <arg name="ar_marker_number"      default="13.0"/>
+  <arg name="camera_parent_frame"   default="/kinect2_link"/>
+  <arg name="robot_parent_frame"    default="/right_hand_camera"/>
+  <arg name="new_marker_frame"      default="/marker"/>
+  <arg name="robot_marker_sub_topic"  default="/ar_pose_marker1"/>
+  <arg name="cam_marker_sub_topic"  default="/ar_pose_marker2"/>
+  <arg name="robot_cam_height"      default="0.50"/>
+
+
+  <arg name="tf_publish_rate"       default="50.0"/>
+  <arg name="inverse"               default="true"/>
+  <arg name="noinverse"             default="false"/>
+
+  <node name="marker_filter" pkg="filter_tf" type="tf_re_broadcast"  respawn="false" output="screen">
+    <param name="robot_new_child_frame"       type="str"      value="$(arg new_marker_frame)"/>
+    <param name="robot_new_parent_frame"      type="str"      value="$(arg robot_parent_frame)"/>
+    <param name="robot_inverse"               type="bool"     value="$(arg noinverse)"/>
+    <param name="robot_marker_sub_topic"      type="str"      value="$(arg robot_marker_sub_topic)"/>
+
+    <param name="cam_new_child_frame"       type="str"      value="$(arg camera_parent_frame)"/>
+    <param name="cam_new_parent_frame"      type="str"      value="$(arg new_marker_frame)"/>
+    <param name="cam_inverse"               type="bool"     value="$(arg inverse)"/>
+    <param name="cam_marker_sub_topic"      type="str"      value="$(arg cam_marker_sub_topic)"/>
+
+    <param name="tf_publish_rate"       type="double"   value="$(arg tf_publish_rate)"/>
+    <param name="ar_marker_number"      type="double"   value="$(arg ar_marker_number)"/>
+    <param name="robot_cam_height"      type="double"   value="$(arg robot_cam_height)"/>
+  </node>
+
+</launch>

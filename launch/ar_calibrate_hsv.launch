@@ -1,0 +1,50 @@
+<launch>
+
+  <arg name="marker_size" default="9.0"/>
+  <arg name="max_new_marker_error"  default="1.1"/>
+  <arg name="max_track_error" default="2.0"/>
+
+
+  <!-- Setup for external camera -->
+  <arg name="cam_rgbd_image_topic"  default="/kinect2/qhd/points"/>
+  <arg name="cam_rgbd_info_topic"   default="/kinect2/qhd/camera_info"/>
+  <arg name="output_cam_frame"      default="/kinect2_link"/>
+
+  <!-- setup ar track alvar 2 for external camera -->
+  <node name="ar_track_alvar2"  pkg="ar_track_alvar"  type="individualMarkers"  respawn="false">
+    <remap from="visualization_marker"  to="visualization_marker2"/>
+    <remap from="ar_pose_marker"        to="ar_pose_marker2"/>
+
+    <param name="marker_size"             type="double"     value="$(arg marker_size)"/>
+    <param name="max_new_marker_error"    type="double"     value="$(arg max_new_marker_error)"/>
+    <param name="max_track_error"         type="double"     value="$(arg max_track_error)"/>
+    <param name="output_frame"            type="string"     value="$(arg output_cam_frame)"/>
+
+    <remap from="camera_image"      to="$(arg cam_rgbd_image_topic)"/>
+    <remap from="camera_info"       to="$(arg cam_rgbd_info_topic)"/>
+
+  </node>
+
+
+  <!-- Setup Sawyer arm camera -->
+  <arg name="robot_cam_image_topic" default="/io/internal_camera/right_hand_camera/image_rect"/>
+  <arg name="robot_cam_info_topic"  default="/io/internal_camera/right_hand_camera/camera_info"/>
+  <arg name="output_frame"          default="/right_hand_camera"/>
+
+  <!-- setup ar track alvar for sawyer arm -->
+  <node name="ar_track_alvar1"  pkg="ar_track_alvar"  type="individualMarkersNoKinect"  respawn="false">
+    <remap from="visualization_marker"  to="visualization_marker1"/>
+    <remap from="ar_pose_marker"        to="ar_pose_marker1"/>
+
+    <param name="marker_size"             type="double"   value="$(arg marker_size)"/>
+    <param name="max_new_marker_error"    type="double"   value="$(arg max_new_marker_error)"/>
+    <param name="max_track_error"         type="double"   value="$(arg max_track_error)"/>
+    <param name="output_frame"            type="string"   value="$(arg output_frame)"/>
+
+    <remap from="camera_image"  to="$(arg robot_cam_image_topic)"/>
+    <remap from="camera_info"   to="$(arg robot_cam_info_topic)"/>
+
+  </node>
+
+
+</launch>

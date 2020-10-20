@@ -1,0 +1,35 @@
+<launch>
+
+  <arg name="rgb_sub_name"        default="/kinect2/qhd/image_color_rect"/>
+  <arg name="kin_sub_name"        default="/kinect2/qhd/points"/>
+  <arg name="points_pub_frame_id" default="/kinect2_link"/>
+  <arg name="points_pub_name"     default="hsv_points"/>
+  <arg name="pub_rate"            default="30.0"/>          <!-- rate that hsv points publish at -->
+  <arg name="hsv_name"            default="hsv_threshold_node"/>
+  <arg name="pose_name"           default="pose_extraction_node"/>
+
+  <param name="points_pub_name" type="str"  value="$(arg points_pub_name)"/>
+  <param name="hsv_name"  type="str"  value="$(arg hsv_name)"/>
+  <param name="pose_name" type="str"  value="$(arg pose_name)"/>
+  <param name="points_pub_frame_id" type="str"  value="$(arg points_pub_frame_id)"/>
+
+  <node pkg="hsv_node_threshold"  type="hsv_threshold_node" name="$(arg hsv_name)" >
+    <param name="rgb_sub_name"  type="str"  value="$(arg rgb_sub_name)"/>
+    <param name="kin_sub_name"  type="str"  value="$(arg kin_sub_name)"/>
+    <param name="pub_rate"  type="double" value="$(arg pub_rate)"/>
+    <rosparam param="hsv_lower">[30.0,120.0,120.0]</rosparam>    <!-- hsv lower threshold values -->
+    <rosparam param="hsv_upper">[90.0,255.0,255.0]</rosparam>  <!-- hsv upper threshold values -->
+  </node>
+
+  <arg name="pose_array_pub_name" default="node_poses"/>
+  <arg name="cluster_points_pub_name" default="node_points"/>
+
+  <node pkg="hsv_node_threshold"  type="pose_extraction_node" name="$(arg pose_name)" >
+    <param name="pose_array_pub_name" type="str"  value="$(arg pose_array_pub_name)"/>
+    <param name="cluster_points_pub_name" type="str"  value="$(arg cluster_points_pub_name)"/>
+    <!-- euclidean cluster params - cluster tolerance, min cluster size, max cluster size -->
+    <rosparam param="ec_params">[0.02, 20.0, 1500.0]</rosparam>
+  </node>
+
+
+</launch>
